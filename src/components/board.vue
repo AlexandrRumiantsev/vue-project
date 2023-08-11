@@ -1,11 +1,13 @@
 <script>
     import BoardColumn from './board-column.vue'
     export default {
-        'name': "Board",
+        name: "Board",
         data() {
             return {
-              boards: {
-
+              checked: {
+                list: [],
+                inprogress: [],
+                done: [],
               },
               wallpaper: [
                 "https://klevtsovaelena.github.io/wallpaper/img/BlackWhite1.jpg",
@@ -300,6 +302,7 @@
         :items="list" 
         name='list' 
         :handlerDragend='handlerDragend'
+        :checked="checked"
       ></board-column>
       <board-column 
         :delTask="delTask" 
@@ -310,6 +313,7 @@
         :items="inprogress" 
         name='inprogress' 
         :handlerDragend='handlerDragend'
+        :checked="checked"
       >
       </board-column>
       <board-column 
@@ -321,6 +325,7 @@
         :items="done" 
         name='done' 
         :handlerDragend='handlerDragend'
+        :checked="checked"
       >
       </board-column>
     </div>

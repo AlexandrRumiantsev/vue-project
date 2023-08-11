@@ -2,10 +2,7 @@
     export default {
         name: "BoardColumn",
         data() {
-            return {
-                renderCount: 0,
-                checkedTask: 0
-            }
+            return {}
         },
         props: [
             'title', 
@@ -15,35 +12,21 @@
             'taskModel', 
             'addTask', 
             'delTask', 
-            'editTask'
+            'editTask',
+            'checked',
         ],
         methods: {
-            update(){
-                this.renderCount = this.renderCount + 1;
-                //Вызываем функцию, для подсчета выделенных задач и обновляем состояние
-                //Которое отвечает за вывод количества выделенных задач
-                this.checkedTask = this.getColumnCheckedCount();
+            debugger(value){
+                console.log(value)
             },
-            //Метод, который возвращает количество задач в колонке
-            getColumnCount(){
-                //Получаем количество объектов в колонке 
-                let countInColumn = this.items.length;
-                //Возвращаем длинну
-                return countInColumn
-            },
-            //Метод, который получает выбранные элементы
-            getColumnCheckedCount(){
-                //Заведем переменную в которую запишем все выделенные задачи
-                let checkedTasks = this.items.filter(function(item){
-                    //Проверяем, что задача выбрана и возвращаем в отфильтрованный массив
-                    if (item.checked) {
-                        // Возвращаем в отфильтрованный массив элеменит, если он выбран
-                        // Галочка в значении true
-                        return item
-                    }
-                })
-                //Возвращаем количество выранных задач
-                return checkedTasks.length;
+            getCountCheckedInColumn(){
+                //Получим из массива все значения true
+                console.log(this.checked[this.name])
+                const countCheckTask = this.checked[this.name].filter(function(element){
+                    return element == true
+                }).length
+                console.log(countCheckTask)
+                return countCheckTask
             }
         }
     }
@@ -66,32 +49,35 @@
           >
             <img src='public/assets/cursor.png'>
           </div>
-          <p class='check-task'>Количество задач: {{getColumnCount()}}</p>
-          <p class='check-task'>Выделено задач: {{checkedTask}}</p>
-          <p class='check-task'>
-            Пользователь выбрал задачу из колонки {{renderCount}} количество раз
-          </p>
+          <p class='check-task'>Количество задач: {{this.items.length}}</p>
+          <p class='check-task'>Выделено задач: {{this.getCountCheckedInColumn()}}</p>
           <ul class='todo-list board__column'>
-              <li 
-                class='todo-item shoping__item'
-                v-for="(item, index) in items"
-                :key="item.id"
-                draggable="true"
-                @dragend="handlerDragend($event, name)"
-                :id="item.id"
-              >
-                {{ item.title }}
-                <div>
-                    <button @click="editTask(item.id, name)">Редактировать</button>
-                    <button @click="delTask(item.id, name)">Удалить</button>
-                    <p>
-                        <label>
-                            Выделить
-                            <input type='checkbox' @click='update' :checked='item.checked' v-model='item.checked'/>
-                        </label>
-                    </p>
-                </div>
-              </li>
+            <li 
+            class='todo-item shoping__item'
+            v-for="(item, index) in items"
+            :key="item.id"
+            draggable="true"
+            @dragend="handlerDragend($event, name)"
+            :id="item.id"
+            >
+            {{ item.title }}
+            <div>
+                <button @click="editTask(item.id, name)">Редактировать</button>
+                <button @click="delTask(item.id, name)">Удалить</button>
+                <p>
+                    <label>
+                        Выделить
+                        <input 
+                            type='checkbox'
+                            v-model="checked[name][index]"
+                            :name="item.title"
+                            :id="item.id"
+                            :key="item.id"
+                        />
+                    </label>
+                </p>
+            </div>
+            </li>
           </ul>
       </section>
 </template>
